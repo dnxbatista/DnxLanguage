@@ -1,0 +1,58 @@
+// The way this works, is that you receive a .dnx file with the correct syntax
+// and it return the .dnx translated to a .cpp file
+// is quite "simple" (the codegen sucks btw)
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include "Lexer.h"
+#include "Parser.h"
+#include "CodeGen.h"
+
+std::string read_file(const std::string& file_path) {
+    std::fstream file(file_path);
+
+    if (!file) {
+        throw std::runtime_error("Could not open file: " + file_path);
+    }
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
+
+int main(int argc, char** argv) {
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <input.dnx> <output.cpp>";
+        return 1;
+    }
+
+    std::string input_path = argv[1];
+    std::string output_path = argv[2];
+
+    try {
+        std::string source = read_file(input_path);
+
+        Lexer lexer(source);
+        auto tokens = lexer.tokenize();
+
+        Parser parser(tokens);
+        Program program = parser.parse();
+
+        CodeGen codegen;
+        std::string cpp = codegen.generate(program);
+
+        std::ofstream output(output_path);
+        if (!output) {
+            std::cerr << "Cannot write to " << output_path << "";
+            return 1;
+        }
+        output << cpp;
+
+        std::cout << "Generated " << output_path << "";
+    } catch (const std::exception& e) {
+        std::cerr << "Error " << e.what();
+        return 1;
+    }
+
+    return 0;
+}
