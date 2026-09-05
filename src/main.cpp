@@ -1,6 +1,9 @@
 // The way this works, is that you receive a .dnx file with the correct syntax
 // and it return the .dnx translated to a .cpp file
 // is quite "simple" (the codegen sucks btw)
+// i used to AI help (not to write everysingle line) but to help me how to make it
+// im not a expert but this gave me some understand about how progamming languages works
+// and THIS IS NOT A VIBE CODED PROJECT, ALL OF THIS WAS WRITTEN AND RESEARCHED BY A HUMAN BEING.
 
 #include <iostream>
 #include <fstream>

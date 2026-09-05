@@ -30,7 +30,7 @@ void Lexer::advance() {
     if (pos < source.size()) ++pos;
 }
 
-void Lexer::skip_whitespace_and_comments() {
+void Lexer::skip_whitespace_and_comments() { // THIS IS NOT WORKING AS IS SUPPOSED TO BE
     while (true) {
         char c = current();
         if (std::isspace(static_cast<unsigned char>(c))) {
@@ -42,7 +42,7 @@ void Lexer::skip_whitespace_and_comments() {
             while (current() != '\0' && current() != ' ') {
                 advance();
             }
-            continue;;
+            continue;
         }
         break;
     }

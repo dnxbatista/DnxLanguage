@@ -1,3 +1,5 @@
+// This turns the ASP into cpp code so you can run it (very basic explanation)
+
 #ifndef DNXLANGUAGE_CODEGEN_H
 #define DNXLANGUAGE_CODEGEN_H
 #include "AST.h"

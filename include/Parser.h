@@ -1,3 +1,7 @@
+
+// The parser get yours tokens and build the AST with the correct "grammar"
+// check the .cpp file to better understand
+
 #ifndef DNXLANGUAGE_PARSER_H
 #define DNXLANGUAGE_PARSER_H
 #include "Token.h"

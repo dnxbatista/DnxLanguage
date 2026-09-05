@@ -12,6 +12,7 @@ add_executable(dnxlang
         src/CodeGen.cpp
 )
 
-target_include_directories(dnxlang PRIVATE # H Files
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+# Include H files
+target_include_directories(dnxlang PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

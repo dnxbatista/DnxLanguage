@@ -1,20 +1,23 @@
+// A token is like the words of the language, the lexer get the raw text from the .dnx file and turn into tokens
+
 #ifndef DNXLANGUAGE_TOKEN_H
 #define DNXLANGUAGE_TOKEN_H
 #include <string>
 
+// Responsible for language types and expressions and etc, like IntLint is a int
 enum class TokenType {
-    // --> Literals
+    // -> Literals
     IntLint,
     Identifier,
 
-    // --> Keywords
+    // -> Keywords
     Var,
     If,
     Else,
     While,
     Print,
 
-    // --> Operators
+    // -> Operators
     Plus,
     Minus,
     Star,
@@ -23,18 +26,19 @@ enum class TokenType {
     Greater,
     Less,
 
-    // --> Delimiters
+    // -> Delimiters
     LParen,
     RParen,
     LBrace,
     RBrace,
     Semicolon,
 
-    // --> Only Special
+    // -> Only Special
     EndOfFile,
     Unknown
 };
 
+// This struct holdes the the type, the raw value and the value from the token
 struct Token {
     TokenType type;
     std::string text; // Raw text

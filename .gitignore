@@ -1,0 +1,5 @@
+#ide
+.vs/
+
+# build directiories
+build/

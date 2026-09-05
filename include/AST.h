@@ -1,3 +1,7 @@
+// AST means Abstract Syntax Tree.
+// What does this do? well if i gonna be honest, i dont really know (even tough i writed all of this)
+// what i know is that you create expressions and statements here, like variables types, funcions, ...
+
 #ifndef DNXLANGUAGE_AST_H
 #define DNXLANGUAGE_AST_H
 #include <string>

@@ -1,3 +1,6 @@
+// The lexer is resposible to make the tokens, if you dont know what is the tokens, open token.h
+// or just search...
+
 #ifndef DNXLANGUAGE_LEXER_H
 #define DNXLANGUAGE_LEXER_H
 #include "Token.h"
