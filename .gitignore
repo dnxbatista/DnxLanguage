@@ -2,4 +2,7 @@
 .vs/
 
 # build directiories
+/build/
 build/
+*.o
+*.exe

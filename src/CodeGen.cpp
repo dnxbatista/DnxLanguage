@@ -17,7 +17,7 @@ std::string CodeGen::generate(const Program& prog) {
     out.str("");
     indentLevel = 0;
 
-    emit("// this code is from a .dnx file");
+    emit("// this code is from a .dnx file\n");
     emit("#include <iostream>\n");
     emit("int main() {\n");
     increase_indent();
