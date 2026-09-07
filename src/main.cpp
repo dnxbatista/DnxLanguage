@@ -8,32 +8,42 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 #include "Lexer.h"
 #include "Parser.h"
 #include "CodeGen.h"
 
-std::string read_file(const std::string& file_path) {
-    std::fstream file(file_path);
+std::string read_file(const std::string& raw_file_path) {
+    std::fstream file(raw_file_path);
+    std::filesystem::path file_path = raw_file_path;
+
+    //Check filepath
+    if (file_path.extension() != ".dnx")
+    {
+        throw std::runtime_error("Cannot convert a non-dnx file");
+    }
 
     if (!file) {
-        throw std::runtime_error("Could not open file: " + file_path);
+        throw std::runtime_error("Could not open file: " + raw_file_path);
     }
+
     std::ostringstream ss;
     ss << file.rdbuf();
     return ss.str();
 }
 
 int main(int argc, char** argv) {
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " <input.dnx> <output.cpp>";
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <filename.dnx>";
         return 1;
     }
 
-    std::string input_path = argv[1];
-    std::string output_path = argv[2];
+    std::string dnxfile_path = argv[1];
+    std::string output_path = "output.cpp";
 
     try {
-        std::string source = read_file(input_path);
+        // try find .dnx file
+        std::string source = read_file(dnxfile_path);
 
         Lexer lexer(source);
         auto tokens = lexer.tokenize();
