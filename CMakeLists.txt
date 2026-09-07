@@ -10,6 +10,7 @@ add_executable(dnxlang
         src/Lexer.cpp
         src/Parser.cpp
         src/CodeGen.cpp
+        src/CodeRunner.cpp
 )
 
 # Include H files

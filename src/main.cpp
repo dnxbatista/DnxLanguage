@@ -12,6 +12,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "CodeGen.h"
+#include "CodeRunner.h"
 
 std::string read_file(const std::string& raw_file_path) {
     std::fstream file(raw_file_path);
@@ -60,8 +61,13 @@ int main(int argc, char** argv) {
             return 1;
         }
         output << cpp;
+        output.close(); // close file before try to run it
 
-        std::cout << "Generated " << output_path << "";
+        std::cout << "Generated " << output_path << "\n";
+
+        // Try run program using g++
+        coderunner::run_program(output_path);
+
     } catch (const std::exception& e) {
         std::cerr << "Error " << e.what();
         return 1;
