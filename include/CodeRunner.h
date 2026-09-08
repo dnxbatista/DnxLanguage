@@ -4,9 +4,9 @@
 #define DNXLANGUAGE_CODERUNNER_H
 #include <string>
 
-namespace coderunner
-{
+class CodeRunner{
+public:
     int run_program(std::string outpath);
-}
+};
 
 #endif //DNXLANGUAGE_CODERUNNER_H

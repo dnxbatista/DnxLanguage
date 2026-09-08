@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 
-int coderunner::run_program(std::string outpath){
+int CodeRunner::run_program(std::string outpath){
     std::cout << "Trying run program\n";
     std::string compile_cmd = "g++ " + outpath + " -o output_program";
 

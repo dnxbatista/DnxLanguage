@@ -66,7 +66,8 @@ int main(int argc, char** argv) {
         std::cout << "Generated " << output_path << "\n";
 
         // Try run program using g++
-        coderunner::run_program(output_path);
+        CodeRunner coderun;
+        coderun.run_program(output_path);
 
     } catch (const std::exception& e) {
         std::cerr << "Error " << e.what();
