@@ -38,10 +38,10 @@ struct ASTStmt {
     virtual ~ASTStmt() = default;
 };
 
-struct VarDecl : ASTStmt {
+struct IntDeclaration : ASTStmt {
     std::string name;
     std::unique_ptr<ASTExpr> init;
-    VarDecl(const std::string& n, std::unique_ptr<ASTExpr> i) : name(n), init(std::move(i)) {}
+    IntDeclaration(const std::string& n, std::unique_ptr<ASTExpr> i) : name(n), init(std::move(i)) {}
 };
 
 struct Assignment : ASTStmt {

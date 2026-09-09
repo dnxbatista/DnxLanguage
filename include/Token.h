@@ -10,8 +10,10 @@ enum class TokenType {
     IntLint,
     Identifier,
 
+    // -> Types
+    Int,
+
     // -> Keywords
-    Var,
     If,
     Else,
     While,

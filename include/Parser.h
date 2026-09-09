@@ -24,7 +24,7 @@ private:
     void expect(TokenType type, const std::string& message);
 
     std::unique_ptr<ASTStmt> parseStatement();
-    std::unique_ptr<VarDecl> parseVarDecl();
+    std::unique_ptr<IntDeclaration> parseVarDecl();
     std::unique_ptr<Assignment> parseAssignment();
     std::unique_ptr<IfStmt> parseIfStmt();
     std::unique_ptr<WhileStmt> parseWhileStmt();

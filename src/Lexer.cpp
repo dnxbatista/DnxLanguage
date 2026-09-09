@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 static const std::unordered_map<std::string, TokenType> keywords = {
-    {"var", TokenType::Var},
+    {"int", TokenType::Int},
     {"if", TokenType::If},
     {"else", TokenType::Else},
     {"while", TokenType::While},

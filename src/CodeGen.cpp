@@ -34,7 +34,7 @@ std::string CodeGen::generate(const Program& prog) {
 }
 
 void CodeGen::gen_stmt(const ASTStmt& stmt) {
-    if (auto v = dynamic_cast<const VarDecl*>(&stmt)) { // THIS ONLY WORK WITH INT
+    if (auto v = dynamic_cast<const IntDeclaration*>(&stmt)) { 
         emit_indent();
         emit("int ");
         emit(v->name);
