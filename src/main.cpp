@@ -13,6 +13,7 @@
 #include "Parser.h"
 #include "CodeGen.h"
 #include "CodeRunner.h"
+#include "TempHandler.h"
 
 std::string read_file(const std::string& raw_file_path) {
     std::fstream file(raw_file_path);
@@ -35,12 +36,13 @@ std::string read_file(const std::string& raw_file_path) {
 
 int main(int argc, char** argv) {
     if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <filename.dnx>";
+        std::cerr << "Usage: " << argv[0] << " <filename.dnx>\n";
         return 1;
     }
 
     std::string dnxfile_path = argv[1];
-    std::string output_path = "output.cpp";
+
+    std::string trans_path = "dnxgeneratedcode.cpp";
 
     try {
         // try find .dnx file
@@ -53,24 +55,38 @@ int main(int argc, char** argv) {
         Program program = parser.parse();
 
         CodeGen codegen;
-        std::string cpp = codegen.generate(program);
+        std::string cpp = codegen.generate(program); // This returns a string
+        
+        // Generate temp folder
+        TempHandler temphandler;
+        std::filesystem::path temp_folder_path = temphandler.create_temp_folder();
+        if (temphandler.check_if_temp_exists(temp_folder_path) != 0)
+        {
+            std::cerr << "Temp folder does not exists";
+            return 1;
+        }
 
-        std::ofstream output(output_path);
+        // Join the temp folder path with the .cpp path
+        std::filesystem::path temp_trans_file_path = temp_folder_path / trans_path;
+
+        std::ofstream output(temp_trans_file_path);
         if (!output) {
-            std::cerr << "Cannot write to " << output_path << "";
+            std::cerr << "Cannot write to " << temp_trans_file_path.c_str() << "";
             return 1;
         }
         output << cpp;
-        output.close(); // close file before try to run it
+        output.close(); // Close file before try to run it
 
-        std::cout << "Generated " << output_path << "\n";
+        std::cout << "Generated " << trans_path.c_str() << "\n";
 
         // Try run program using g++
         CodeRunner coderun;
-        coderun.run_program(output_path);
+        if (coderun.run_program(temp_folder_path ,temp_trans_file_path) == 0) {
+            temphandler.delete_temp_folder(temp_folder_path);
+        }
 
-    } catch (const std::exception& e) {
-        std::cerr << "Error " << e.what();
+    } catch (const std::exception& error) {
+        std::cerr << "Error " << error.what();
         return 1;
     }
 

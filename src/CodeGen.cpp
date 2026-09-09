@@ -12,7 +12,7 @@ void CodeGen::emit_indent() {
 void CodeGen::increase_indent() { ++indentLevel; }
 void CodeGen::decrease_indent() { --indentLevel; }
 
-// This is reponsible for generating the .cpp file from the .dnx
+// This is reponsible for generating the .cpp file from the .dnx (as a string)
 std::string CodeGen::generate(const Program& prog) {
     out.str("");
     indentLevel = 0;

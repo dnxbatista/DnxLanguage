@@ -11,6 +11,7 @@ add_executable(dnxlang
         src/Parser.cpp
         src/CodeGen.cpp
         src/CodeRunner.cpp
+        src/TempHandler.cpp
 )
 
 # Include H files
