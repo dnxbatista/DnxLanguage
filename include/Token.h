@@ -12,6 +12,7 @@ enum class token_type {
 
     // -> Types
     Int,
+    String,
 
     // -> Keywords
     If,

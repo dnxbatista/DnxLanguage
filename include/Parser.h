@@ -23,19 +23,19 @@ private:
     void advance();
     void expect(token_type type, const std::string& message);
 
-    std::unique_ptr<ast_statement> parseStatement();
-    std::unique_ptr<int_declaration> parseVarDecl();
-    std::unique_ptr<assignment> parseAssignment();
-    std::unique_ptr<if_statement> parseIfStmt();
-    std::unique_ptr<while_statement> parseWhileStmt();
-    std::unique_ptr<print_statement> parsePrintStmt();
-    std::vector<std::unique_ptr<ast_statement>> parseBlock();
+    std::unique_ptr<ast_statement> parse_statement();
+    std::unique_ptr<int_declaration> parse_int_declaration();
+    std::unique_ptr<assignment> parse_assignment();
+    std::unique_ptr<if_statement> parse_if_statement();
+    std::unique_ptr<while_statement> parse_while_statement();
+    std::unique_ptr<print_statement> parse_print_statement();
+    std::vector<std::unique_ptr<ast_statement>> parse_block();
 
-    std::unique_ptr<ast_expression> parseExpression();
-    std::unique_ptr<ast_expression> parseComparison();
-    std::unique_ptr<ast_expression> parseAddition();
-    std::unique_ptr<ast_expression> parseMultiplication();
-    std::unique_ptr<ast_expression> parsePrimary();
+    std::unique_ptr<ast_expression> parse_expression();
+    std::unique_ptr<ast_expression> parse_comparison();
+    std::unique_ptr<ast_expression> parse_addition();
+    std::unique_ptr<ast_expression> parse_multiplication();
+    std::unique_ptr<ast_expression> parse_primary();
 
     [[noreturn]] void error(const std::string& msg);
 };
