@@ -2,12 +2,12 @@
 #include <cctype>
 #include <unordered_map>
 
-static const std::unordered_map<std::string, TokenType> keywords = {
-    {"int", TokenType::Int},
-    {"if", TokenType::If},
-    {"else", TokenType::Else},
-    {"while", TokenType::While},
-    {"print", TokenType::Print},
+static const std::unordered_map<std::string, token_type> keywords = {
+    {"int", token_type::Int},
+    {"if", token_type::If},
+    {"else", token_type::Else},
+    {"while", token_type::While},
+    {"print", token_type::Print},
 };
 
 Lexer::Lexer(const std::string& source) : source(source), pos(0) {}
@@ -48,16 +48,16 @@ void Lexer::skip_whitespace_and_comments() { // THIS IS NOT WORKING AS IS SUPPOS
     }
 }
 
-Token Lexer::read_number() {
+token Lexer::read_number() {
     std::string number;
     while (std::isdigit(static_cast<unsigned char>(current()))) {
         number += current();
         advance();
     }
-    return Token(TokenType::IntLint, number, number);
+    return token(token_type::IntLint, number, number);
 }
 
-Token Lexer::read_identifier_or_keyword() {
+token Lexer::read_identifier_or_keyword() {
     std::string id;
     while (std::isalnum(static_cast<unsigned char>(current())) || current() == '_') {
         id += current();
@@ -65,38 +65,38 @@ Token Lexer::read_identifier_or_keyword() {
     }
     auto it = keywords.find(id);
     if (it != keywords.end()) {
-        return Token(it->second, id, id);
+        return token(it->second, id, id);
     }
-    return Token(TokenType::Identifier, id, id);
+    return token(token_type::Identifier, id, id);
 }
 
-Token Lexer::read_single_char_token() {
+token Lexer::read_single_char_token() {
     char c = current();
     advance();
     switch (c) {
-        case '+': return Token(TokenType::Plus, "+");
-        case '-': return Token(TokenType::Minus, "-");
-        case '*': return Token(TokenType::Star, "*");
-        case '/': return Token(TokenType::Slash, "/");
-        case '=': return Token(TokenType::Equal, "=");
-        case '>': return Token(TokenType::Greater, ">");
-        case '<': return Token(TokenType::Less, "<");
-        case '(': return Token(TokenType::LParen, "(");
-        case ')': return Token(TokenType::RParen, ")");
-        case '{': return Token(TokenType::LBrace, "{");
-        case '}': return Token(TokenType::RBrace, "}");
-        case ';': return Token(TokenType::Semicolon, ";");
-        default: return Token(TokenType::Unknown, std::string(1, c));
+        case '+': return token(token_type::Plus, "+");
+        case '-': return token(token_type::Minus, "-");
+        case '*': return token(token_type::Star, "*");
+        case '/': return token(token_type::Slash, "/");
+        case '=': return token(token_type::Equal, "=");
+        case '>': return token(token_type::Greater, ">");
+        case '<': return token(token_type::Less, "<");
+        case '(': return token(token_type::LParen, "(");
+        case ')': return token(token_type::RParen, ")");
+        case '{': return token(token_type::LBrace, "{");
+        case '}': return token(token_type::RBrace, "}");
+        case ';': return token(token_type::Semicolon, ";");
+        default: return token(token_type::Unknown, std::string(1, c));
     }
 }
 
-std::vector<Token> Lexer::tokenize() {
-    std::vector<Token> tokens;
+std::vector<token> Lexer::tokenize() {
+    std::vector<token> tokens;
     while (true) {
         skip_whitespace_and_comments();
         char c = current();
         if (c == '\0') {
-            tokens.emplace_back(TokenType::EndOfFile, "");
+            tokens.emplace_back(token_type::EndOfFile, "");
             break;
         }
         if (std::isdigit(static_cast<unsigned char>(c))) {

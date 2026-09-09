@@ -13,7 +13,7 @@ void CodeGen::increase_indent() { ++indentLevel; }
 void CodeGen::decrease_indent() { --indentLevel; }
 
 // This is reponsible for generating the .cpp file from the .dnx (as a string)
-std::string CodeGen::generate(const Program& prog) {
+std::string CodeGen::generate(const translated_program& prog) {
     out.str("");
     indentLevel = 0;
 
@@ -33,21 +33,21 @@ std::string CodeGen::generate(const Program& prog) {
     return out.str();
 }
 
-void CodeGen::gen_stmt(const ASTStmt& stmt) {
-    if (auto v = dynamic_cast<const IntDeclaration*>(&stmt)) { 
+void CodeGen::gen_stmt(const ast_statement& stmt) {
+    if (auto v = dynamic_cast<const int_declaration*>(&stmt)) { 
         emit_indent();
         emit("int ");
         emit(v->name);
         emit(" = ");
         gen_expr(*v->init);
         emit(";\n");
-    } else if (auto a = dynamic_cast<const Assignment*>(&stmt)) {
+    } else if (auto a = dynamic_cast<const assignment*>(&stmt)) {
         emit_indent();
         emit(a->name);
         emit(" = ");
         gen_expr(*a->value);
         emit(";\n");
-    } else if (auto i = dynamic_cast<const IfStmt*>(&stmt)) {
+    } else if (auto i = dynamic_cast<const if_statement*>(&stmt)) {
         emit_indent();
         emit("if (");
         gen_expr(*i->condition);
@@ -66,7 +66,7 @@ void CodeGen::gen_stmt(const ASTStmt& stmt) {
             emit("}");
         }
         emit("\n");
-    } else if (auto w = dynamic_cast<const WhileStmt*>(&stmt)) {
+    } else if (auto w = dynamic_cast<const while_statement*>(&stmt)) {
         emit_indent();
         emit("while (");
         gen_expr(*w->condition);
@@ -76,7 +76,7 @@ void CodeGen::gen_stmt(const ASTStmt& stmt) {
         decrease_indent();
         emit_indent();
         emit("}\n");
-    } else if (auto p = dynamic_cast<const PrintStmt*>(&stmt)) {
+    } else if (auto p = dynamic_cast<const print_statement*>(&stmt)) {
         emit_indent();
         emit("std::cout << ");
         gen_expr(*p->expression);
@@ -86,21 +86,21 @@ void CodeGen::gen_stmt(const ASTStmt& stmt) {
     }
 }
 
-void CodeGen::gen_expr(const ASTExpr& expr) {
-    if (auto i = dynamic_cast<const IntLiteral*>(&expr)) {
+void CodeGen::gen_expr(const ast_expression& expr) {
+    if (auto i = dynamic_cast<const int_literal*>(&expr)) {
         emit(std::to_string(i->value));
-    } else if (auto id = dynamic_cast<const IdentifierExpr*>(&expr)) {
+    } else if (auto id = dynamic_cast<const identifier_expression*>(&expr)) {
         emit(id->name);
-    } else if (auto b = dynamic_cast<const BinaryExpr*>(&expr)) {
+    } else if (auto b = dynamic_cast<const binary_expression*>(&expr)) {
         emit("(");
         gen_expr(*b->left);
         switch (b->op) {
-            case BinaryExpr::Add: emit(" + "); break;
-            case BinaryExpr::Sub: emit(" - "); break;
-            case BinaryExpr::Mul: emit(" * "); break;
-            case BinaryExpr::Div: emit(" / "); break;
-            case BinaryExpr::Gt:  emit(" > "); break;
-            case BinaryExpr::Lt:  emit(" < "); break;
+            case binary_expression::Add: emit(" + "); break;
+            case binary_expression::Sub: emit(" - "); break;
+            case binary_expression::Mul: emit(" * "); break;
+            case binary_expression::Div: emit(" / "); break;
+            case binary_expression::Gt:  emit(" > "); break;
+            case binary_expression::Lt:  emit(" < "); break;
         }
         gen_expr(*b->right);
         emit(")");

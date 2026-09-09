@@ -11,7 +11,7 @@ class Lexer {
 public:
     explicit Lexer(const std::string& source); // The explicit keyword is something related to buffer, idk
 
-    std::vector<Token> tokenize();
+    std::vector<token> tokenize();
 
 private:
     std::string source;
@@ -21,9 +21,9 @@ private:
     char peek() const;
     void advance();
     void skip_whitespace_and_comments();
-    Token read_number();
-    Token read_identifier_or_keyword();
-    Token read_single_char_token();
+    token read_number();
+    token read_identifier_or_keyword();
+    token read_single_char_token();
 };
 
 #endif //DNXLANGUAGE_LEXER_H

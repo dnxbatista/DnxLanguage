@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
         auto tokens = lexer.tokenize();
 
         Parser parser(tokens);
-        Program program = parser.parse();
+        translated_program program = parser.parse();
 
         CodeGen codegen;
         std::string cpp = codegen.generate(program); // This returns a string
