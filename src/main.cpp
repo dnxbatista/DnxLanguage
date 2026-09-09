@@ -73,13 +73,6 @@ int main(int argc, char** argv) {
 
         CodeGen codegen;
         std::string cpp = codegen.generate(program); // This returns a string
-        
-        // Generate temp folder
-        if (temphandler.check_if_temp_exists(temp_folder_path) != 0)
-        {
-            std::cerr << "Temp folder does not exists";
-            return 1;
-        }
 
         // Join the temp folder path with the .cpp path
         std::filesystem::path temp_trans_file_path = temp_folder_path / trans_path;
@@ -102,10 +95,12 @@ int main(int argc, char** argv) {
         }
 
     } catch (const std::exception& error) {
-        std::cerr << "Error " << error.what();
+        std::cout << "------------------------------------------\n";
+        std::cerr << "Try Catch Error:\n" << error.what() << "\n";
+        std::cout << "------------------------------------------\n";
 
         // try to delete the temp folder if the program just fails for some reason
-        if (temphandler.check_if_temp_exists(temp_folder_path)) {
+        if (std::filesystem::exists(temp_folder_path) == true) {
             temphandler.delete_temp_folder(temp_folder_path);
         }
         return 1;

@@ -21,7 +21,10 @@ private:
     char peek() const;
     void advance();
     void skip_whitespace_and_comments();
+
     token read_number();
+    token read_string();
+
     token read_identifier_or_keyword();
     token read_single_char_token();
 };

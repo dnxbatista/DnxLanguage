@@ -34,7 +34,7 @@ std::filesystem::path TempHandler::create_temp_folder(int local_folder_flag){
 
 // Yeah i know, filesystem::exists does the exact same thing
 int TempHandler::check_if_temp_exists(std::filesystem::path temp_folder_path){
-    if (!std::filesystem::exists(temp_folder_path)) {
+    if (std::filesystem::exists(temp_folder_path)) {
         return 1;
     }
     return 0;

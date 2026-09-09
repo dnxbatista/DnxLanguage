@@ -1,9 +1,11 @@
 #include "Lexer.h"
 #include <cctype>
 #include <unordered_map>
+#include <stdexcept>
 
 static const std::unordered_map<std::string, token_type> keywords = {
     {"int", token_type::Int},
+    {"string", token_type::String},
     {"if", token_type::If},
     {"else", token_type::Else},
     {"while", token_type::While},
@@ -48,13 +50,33 @@ void Lexer::skip_whitespace_and_comments() { // THIS IS NOT WORKING AS IS SUPPOS
     }
 }
 
+// -> Read variable types 
 token Lexer::read_number() {
     std::string number;
     while (std::isdigit(static_cast<unsigned char>(current()))) {
         number += current();
         advance();
     }
-    return token(token_type::IntLint, number, number);
+    return token(token_type::IntLiteral, number, number);
+}
+
+token Lexer::read_string()
+{
+    advance(); // opening quote
+
+    std::string value;
+    while (current() != '"' && current() != '\0'){
+        value += current();
+        advance();
+    }
+
+    if (current() != '"')
+    {
+        throw std::runtime_error("String not finished");
+    }
+
+    advance();
+    return token(token_type::StringLiteral, value, value);
 }
 
 token Lexer::read_identifier_or_keyword() {
@@ -103,6 +125,8 @@ std::vector<token> Lexer::tokenize() {
             tokens.push_back(read_number());
         } else if (std::isalpha(static_cast<unsigned char>(c)) || c == '_') {
             tokens.push_back(read_identifier_or_keyword());
+        } else if(c == '"'){
+            tokens.push_back(read_string());
         } else {
             tokens.push_back(read_single_char_token());
         }

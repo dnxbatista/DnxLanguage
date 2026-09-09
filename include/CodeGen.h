@@ -20,7 +20,7 @@ private:
     void increase_indent();
     void decrease_indent();
 
-    void gen_stmt(const ast_statement& stmt);
-    void gen_expr(const ast_expression& expr);
+    void generate_statement(const ast_statement& stmt);
+    void generate_expression(const ast_expression& expr);
 };
 #endif //DNXLANGUAGE_CODEGEN_H

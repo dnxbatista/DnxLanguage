@@ -7,7 +7,8 @@
 // Responsible for language types and expressions and etc, like IntLint is a int
 enum class token_type {
     // -> Literals
-    IntLint,
+    IntLiteral,
+    StringLiteral,
     Identifier,
 
     // -> Types

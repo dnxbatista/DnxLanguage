@@ -18,6 +18,11 @@ struct int_literal : ast_expression {
     explicit int_literal(int v) : value(v) {}
 };
 
+struct string_literal : ast_expression {
+    std::string value;
+    explicit string_literal(const std::string& v) : value(v) {}
+};
+
 struct identifier_expression : ast_expression {
     std::string name;
     explicit identifier_expression(const std::string& n) : name(n) {}
@@ -42,6 +47,12 @@ struct int_declaration : ast_statement {
     std::string name;
     std::unique_ptr<ast_expression> init;
     int_declaration(const std::string& n, std::unique_ptr<ast_expression> i) : name(n), init(std::move(i)) {}
+};
+
+struct string_declaration : ast_statement {
+    std::string name;
+    std::unique_ptr<ast_expression> init;
+    string_declaration(const std::string& n, std::unique_ptr<ast_expression> i) : name(n), init(std::move(i)) {}
 };
 
 struct assignment : ast_statement {

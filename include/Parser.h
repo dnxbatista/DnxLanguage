@@ -25,6 +25,7 @@ private:
 
     std::unique_ptr<ast_statement> parse_statement();
     std::unique_ptr<int_declaration> parse_int_declaration();
+    std::unique_ptr<string_declaration> parse_string_declaration();
     std::unique_ptr<assignment> parse_assignment();
     std::unique_ptr<if_statement> parse_if_statement();
     std::unique_ptr<while_statement> parse_while_statement();

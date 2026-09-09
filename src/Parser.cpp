@@ -37,6 +37,8 @@ std::unique_ptr<ast_statement> Parser::parse_statement() {
     switch (current().type) {
         case token_type::Int:
             return parse_int_declaration();
+        case token_type::String:
+            return parse_string_declaration();
         case token_type::If:
             return parse_if_statement();
         case token_type::While:
@@ -51,13 +53,13 @@ std::unique_ptr<ast_statement> Parser::parse_statement() {
 }
 
 /*
-What we doing here, is skiping the var token, then go to the next token
+What we doing here, is skiping the int token, then go to the next token
 find and erros in the way, and then declare what type of variable is it
 */
 std::unique_ptr<int_declaration> Parser::parse_int_declaration() {
-    advance(); // consume 'var'
+    advance(); // consume 'int'
     if (current().type != token_type::Identifier) {
-        error("Expected identifier after 'var'");
+        error("Expected identifier after 'int'");
     }
     std::string name = current().value;
     advance();
@@ -67,6 +69,21 @@ std::unique_ptr<int_declaration> Parser::parse_int_declaration() {
     expect(token_type::Semicolon, "Expected ';' after variable declaration");
 
     return std::make_unique<int_declaration>(name, std::move(expr));
+}
+
+std::unique_ptr<string_declaration> Parser::parse_string_declaration() {
+    advance();
+    if (current().type != token_type::Identifier) {
+        error("Expected identifier after 'string'");
+    }
+    std::string name = current().value;
+    advance();
+
+    expect(token_type::Equal, "Expected '=' in variable declaration");
+    auto expr = parse_expression();
+    expect(token_type::Semicolon, "Expected ';' after variable declaration");
+
+    return std::make_unique<string_declaration>(name, std::move(expr));
 }
 
 std::unique_ptr<assignment> Parser::parse_assignment() {
@@ -166,10 +183,16 @@ std::unique_ptr<ast_expression> Parser::parse_multiplication() {
 }
 
 std::unique_ptr<ast_expression> Parser::parse_primary() {
-    if (current().type == token_type::IntLint) {
+    if (current().type == token_type::IntLiteral) {
         int val = std::stoi(current().value);
         advance();
         return std::make_unique<int_literal>(val);
+    }
+    if (current().type == token_type::StringLiteral)
+    {
+        std::string value = current().value;
+        advance();
+        return std::make_unique<string_literal>(value);
     }
     if (current().type == token_type::Identifier) {
         std::string name = current().value;
