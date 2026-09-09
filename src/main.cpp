@@ -1,5 +1,6 @@
 // The way this works, is that you receive a .dnx file with the correct syntax
 // and it return the .dnx translated to a .cpp file
+// then using g++, runs the created .cpp file, and then deletes itself
 // is quite "simple" (the codegen sucks btw)
 // i used to AI help (not to write everysingle line) but to help me how to make it
 // im not a expert but this gave me some understand about how progamming languages works
@@ -42,7 +43,9 @@ int main(int argc, char** argv) {
 
     std::string dnxfile_path = argv[1];
 
+    TempHandler temphandler;
     std::string trans_path = "dnxgeneratedcode.cpp";
+    std::filesystem::path temp_folder_path = temphandler.create_temp_folder();
 
     try {
         // try find .dnx file
@@ -58,8 +61,6 @@ int main(int argc, char** argv) {
         std::string cpp = codegen.generate(program); // This returns a string
         
         // Generate temp folder
-        TempHandler temphandler;
-        std::filesystem::path temp_folder_path = temphandler.create_temp_folder();
         if (temphandler.check_if_temp_exists(temp_folder_path) != 0)
         {
             std::cerr << "Temp folder does not exists";
@@ -87,6 +88,11 @@ int main(int argc, char** argv) {
 
     } catch (const std::exception& error) {
         std::cerr << "Error " << error.what();
+
+        // try to delete the temp folder if the program just fails for some reason
+        if (temphandler.check_if_temp_exists(temp_folder_path)) {
+            temphandler.delete_temp_folder(temp_folder_path);
+        }
         return 1;
     }
 
