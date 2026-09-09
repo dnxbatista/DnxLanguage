@@ -12,10 +12,12 @@ void CodeGen::emit_indent() {
 void CodeGen::increase_indent() { ++indentLevel; }
 void CodeGen::decrease_indent() { --indentLevel; }
 
+// This is reponsible for generating the .cpp file from the .dnx (as a string)
 std::string CodeGen::generate(const Program& prog) {
     out.str("");
     indentLevel = 0;
 
+    emit("// this code is from a .dnx file\n");
     emit("#include <iostream>\n");
     emit("int main() {\n");
     increase_indent();
@@ -32,7 +34,7 @@ std::string CodeGen::generate(const Program& prog) {
 }
 
 void CodeGen::gen_stmt(const ASTStmt& stmt) {
-    if (auto v = dynamic_cast<const VarDecl*>(&stmt)) {
+    if (auto v = dynamic_cast<const VarDecl*>(&stmt)) { // THIS ONLY WORK WITH INT
         emit_indent();
         emit("int ");
         emit(v->name);
@@ -80,7 +82,7 @@ void CodeGen::gen_stmt(const ASTStmt& stmt) {
         gen_expr(*p->expression);
         emit(" << std::endl;\n");
     } else {
-        // unknown statement, ignore or throw
+        // Unknown statement, just ignore
     }
 }
 

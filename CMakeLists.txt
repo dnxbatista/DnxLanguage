@@ -10,8 +10,11 @@ add_executable(dnxlang
         src/Lexer.cpp
         src/Parser.cpp
         src/CodeGen.cpp
+        src/CodeRunner.cpp
+        src/TempHandler.cpp
 )
 
-target_include_directories(dnxlang PRIVATE # H Files
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+# Include H files
+target_include_directories(dnxlang PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

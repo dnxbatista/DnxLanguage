@@ -1,3 +1,5 @@
+// Check the parseVarDecl to a very basic explanation
+
 #include "Parser.h"
 #include <iostream>
 
@@ -30,6 +32,7 @@ Program Parser::parse() {
     return prog;
 }
 
+// This check what we are reading at the moment and return the correct statement
 std::unique_ptr<ASTStmt> Parser::parseStatement() {
     switch (current().type) {
         case TokenType::Var:
@@ -47,6 +50,10 @@ std::unique_ptr<ASTStmt> Parser::parseStatement() {
     }
 }
 
+/*
+What we doing here, is skiping the var token, then go to the next token
+find and erros in the way, and then declare what type of variable is it
+*/
 std::unique_ptr<VarDecl> Parser::parseVarDecl() {
     advance(); // consume 'var'
     if (current().type != TokenType::Identifier) {
