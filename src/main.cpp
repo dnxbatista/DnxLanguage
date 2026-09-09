@@ -36,16 +36,30 @@ std::string read_file(const std::string& raw_file_path) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 2) {
+    // Flags
+    int flag_use_local_folder_to_compile = 0;
+
+    // Receive arguments
+    if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <filename.dnx>\n";
         return 1;
+    }
+
+    if (argc == 3){
+        std::string optional_arg = argv[2];
+        if (optional_arg == "-l") {
+            flag_use_local_folder_to_compile = 1;
+        } else {
+            std::cerr << "This is not a valid optional argument";
+            return 1;
+        }
     }
 
     std::string dnxfile_path = argv[1];
 
     TempHandler temphandler;
     std::string trans_path = "dnxgeneratedcode.cpp";
-    std::filesystem::path temp_folder_path = temphandler.create_temp_folder();
+    std::filesystem::path temp_folder_path = temphandler.create_temp_folder(flag_use_local_folder_to_compile);
 
     try {
         // try find .dnx file
@@ -80,9 +94,10 @@ int main(int argc, char** argv) {
 
         std::cout << "Generated " << trans_path.c_str() << "\n";
 
-        // Try run program using g++
+        // Try run program using g++ and check for local flag
         CodeRunner coderun;
-        if (coderun.run_program(temp_folder_path ,temp_trans_file_path) == 0) {
+        if (coderun.run_program(temp_folder_path ,temp_trans_file_path) == 0 &&
+    flag_use_local_folder_to_compile == 0) {
             temphandler.delete_temp_folder(temp_folder_path);
         }
 

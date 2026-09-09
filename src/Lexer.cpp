@@ -39,7 +39,7 @@ void Lexer::skip_whitespace_and_comments() { // THIS IS NOT WORKING AS IS SUPPOS
         }
 
         if (c == '/' && peek() == '/') {
-            while (current() != '\0' && current() != ' ') {
+            while (current() != '\0' && current() != '\n') {
                 advance();
             }
             continue;

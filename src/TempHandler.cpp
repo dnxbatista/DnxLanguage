@@ -3,7 +3,7 @@
 #include <random>
 #include <sstream>
 
-std::filesystem::path TempHandler::create_temp_folder(){
+std::filesystem::path TempHandler::create_temp_folder(int local_folder_flag){
     // Get the temp folder dir
     std::filesystem::path temp_base_path = std::filesystem::temp_directory_path();
 
@@ -14,13 +14,12 @@ std::filesystem::path TempHandler::create_temp_folder(){
 
     std::filesystem::path unique_path;
     
-    // Check if path already exists in temp dir
     do {
         std::stringstream ss;
         ss << "dnxtemp_" << std::hex << distribution(generator);
-        unique_path = temp_base_path / ss.str();
+        unique_path = local_folder_flag == 1 ? ss.str() : (temp_base_path / ss.str());
     } while (std::filesystem::exists(unique_path));
-
+    
     // Create directory
     if(std::filesystem::create_directory(unique_path)) {
         std::cout << "Temp folder created sucessfully\n";
@@ -33,6 +32,7 @@ std::filesystem::path TempHandler::create_temp_folder(){
     return unique_path;
 }
 
+// Yeah i know, filesystem::exists does the exact same thing
 int TempHandler::check_if_temp_exists(std::filesystem::path temp_folder_path){
     if (!std::filesystem::exists(temp_folder_path)) {
         return 1;

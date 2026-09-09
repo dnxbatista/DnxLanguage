@@ -1,4 +1,6 @@
-var x = 20
-var y = 25
-var z = x + y
-print z
+// This is a comment and should be ignored
+var a = 15;
+var b = 10;
+var c = a + b;
+print c; // result should be 25
+// This is also a comment and should be ignored
