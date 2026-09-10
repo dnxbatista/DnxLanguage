@@ -1,6 +1,14 @@
-// This is a comment and should be ignored
-var a = 15;
-var b = 10;
-var c = a + b;
-print c; // result should be 25
-// This is also a comment and should be ignored
+// This is a example code
+string a = "Hello World";
+int b = 20 * 2;
+print a;
+
+if (b > 40) {
+    print a;
+} else {
+    print b + 10;
+}
+
+// Output should be:
+// test string
+// 50
