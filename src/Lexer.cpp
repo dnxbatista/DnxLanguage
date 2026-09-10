@@ -32,7 +32,7 @@ void Lexer::advance() {
     if (pos < source.size()) ++pos;
 }
 
-void Lexer::skip_whitespace_and_comments() { // THIS IS NOT WORKING AS IS SUPPOSED TO BE
+void Lexer::skip_whitespace_and_comments() {
     while (true) {
         char c = current();
         if (std::isspace(static_cast<unsigned char>(c))) {
@@ -40,7 +40,7 @@ void Lexer::skip_whitespace_and_comments() { // THIS IS NOT WORKING AS IS SUPPOS
         continue;
         }
 
-        if (c == '/' && peek() == '/') {
+        if (c == '#') {
             while (current() != '\0' && current() != '\n') {
                 advance();
             }
@@ -62,7 +62,7 @@ token Lexer::read_number() {
 
 token Lexer::read_string()
 {
-    advance(); // opening quote
+    advance(); // first quote
 
     std::string value;
     while (current() != '"' && current() != '\0'){
