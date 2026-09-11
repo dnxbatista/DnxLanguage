@@ -15,6 +15,8 @@
 #include "CodeGen.h"
 #include "CodeRunner.h"
 #include "TempHandler.h"
+#include "ConsoleHelper.h"
+#include "AppFlags.h"
 
 std::string read_file(const std::string& raw_file_path) {
     std::fstream file(raw_file_path);
@@ -36,21 +38,26 @@ std::string read_file(const std::string& raw_file_path) {
 }
 
 int main(int argc, char** argv) {
-    // Flags
-    int flag_use_local_folder_to_compile = 0;
 
     // Receive arguments
     if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <filename.dnx>\n";
+        console::to_console_error("Usage: ", argv[0], " <filename.dnx>", " <flags>\n");
+        //std::cerr << "Usage: " << argv[0] << " <filename.dnx>\n";
         return 1;
     }
 
     if (argc == 3){
         std::string optional_arg = argv[2];
         if (optional_arg == "-l") {
-            flag_use_local_folder_to_compile = 1;
-        } else {
-            std::cerr << "This is not a valid optional argument";
+            appflags.use_local_folder = 1;
+        } else if (optional_arg == "-s"){
+            appflags.log_sequence = 1;
+        } else if (optional_arg == "-ls"){
+            appflags.use_local_folder = 1;
+            appflags.log_sequence = 1;
+        } 
+        else {
+            console::to_console_error("This is not a valid optional argument");
             return 1;
         }
     }
@@ -59,7 +66,7 @@ int main(int argc, char** argv) {
 
     TempHandler temphandler;
     std::string trans_path = "dnxgeneratedcode.cpp";
-    std::filesystem::path temp_folder_path = temphandler.create_temp_folder(flag_use_local_folder_to_compile);
+    std::filesystem::path temp_folder_path = temphandler.create_temp_folder(appflags.use_local_folder);
 
     try {
         // try find .dnx file
@@ -79,25 +86,24 @@ int main(int argc, char** argv) {
 
         std::ofstream output(temp_trans_file_path);
         if (!output) {
-            std::cerr << "Cannot write to " << temp_trans_file_path.c_str() << "";
+            console::to_console_error("Cannot write to ", temp_trans_file_path.c_str(), "");
             return 1;
         }
         output << cpp;
         output.close(); // Close file before try to run it
 
-        std::cout << "Generated " << trans_path.c_str() << "\n";
+        console::to_console("Generated ", trans_path.c_str(), "\n");
 
         // Try run program using g++ and check for local flag
         CodeRunner coderun;
         if (coderun.run_program(temp_folder_path ,temp_trans_file_path) == 0 &&
-    flag_use_local_folder_to_compile == 0) {
+    appflags.use_local_folder == 0) {
             temphandler.delete_temp_folder(temp_folder_path);
         }
 
     } catch (const std::exception& error) {
-        std::cout << "------------------------------------------\n";
-        std::cerr << "Try Catch Error:\n" << error.what() << "\n";
-        std::cout << "------------------------------------------\n";
+        console::to_console_error("Main program:\n");
+        std::cerr << error.what() << "\n";
 
         // try to delete the temp folder if the program just fails for some reason
         if (std::filesystem::exists(temp_folder_path) == true) {

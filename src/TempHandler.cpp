@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include <sstream>
+#include "ConsoleHelper.h"
 
 std::filesystem::path TempHandler::create_temp_folder(int local_folder_flag){
     // Get the temp folder dir
@@ -22,9 +23,9 @@ std::filesystem::path TempHandler::create_temp_folder(int local_folder_flag){
     
     // Create directory
     if(std::filesystem::create_directory(unique_path)) {
-        std::cout << "Temp folder created sucessfully\n";
+        console::to_console_sucess("Temp folder created sucessfully\n");
     } else {
-        std::cout << "Error creating temp folder\n";
+        console::to_console_warning("Error creating temp folder\n");
         std::filesystem::path empty_path = "";
         return empty_path;
     }
@@ -43,18 +44,19 @@ int TempHandler::check_if_temp_exists(std::filesystem::path temp_folder_path){
 int TempHandler::delete_temp_folder(std::filesystem::path temp_folder_path)
 {
     if (!std::filesystem::exists(temp_folder_path)) {
-        std::cerr << "Temp folder does not exists in currently directory\n";
+        console::to_console_error("Temp folder does not exists in currently directory\n");
         return 1;
     }
 
     try {
         // Delete folder and files inside
         std::uintmax_t deleted_items = std::filesystem::remove_all(temp_folder_path);
-        std::cout << "Deleted folder with: " << deleted_items << "\n";
+        console::to_console_sucess("Deleted folder with: ", deleted_items, "\n");
         return 0;  
     } catch (const std::filesystem::filesystem_error& error)
     {
-        std::cerr << "File System Error: " << error.what() << "\n";
+        console::to_console_error("Temp Handler Error:\n");
+        std::cerr << error.what() << "\n";
         return 1;
     }
 

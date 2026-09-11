@@ -1,4 +1,4 @@
-// This is a example code
+# This is a example code
 string a = "Hello World";
 int b = 20 * 2;
 print a;
@@ -9,6 +9,6 @@ if (b > 40) {
     print b + 10;
 }
 
-// Output should be:
-// test string
-// 50
+# Output should be:
+# test string
+# 50
