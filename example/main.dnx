@@ -1,4 +1,14 @@
-var x = 20
-var y = 25
-var z = x + y
-print z
+# This is a example code
+string a = "Hello World";
+int b = 20 * 2;
+print a;
+
+if (b > 40) {
+    print a;
+} else {
+    print b + 10;
+}
+
+# Output should be:
+# test string
+# 50

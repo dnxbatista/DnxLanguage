@@ -15,6 +15,8 @@
 #include "CodeGen.h"
 #include "CodeRunner.h"
 #include "TempHandler.h"
+#include "ConsoleHelper.h"
+#include "AppFlags.h"
 
 std::string read_file(const std::string& raw_file_path) {
     std::fstream file(raw_file_path);
@@ -36,16 +38,35 @@ std::string read_file(const std::string& raw_file_path) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <filename.dnx>\n";
+
+    // Receive arguments
+    if (argc < 2) {
+        console::to_console_error("Usage: ", argv[0], " <filename.dnx>", " <flags>\n");
+        //std::cerr << "Usage: " << argv[0] << " <filename.dnx>\n";
         return 1;
+    }
+
+    if (argc == 3){
+        std::string optional_arg = argv[2];
+        if (optional_arg == "-l") {
+            appflags.use_local_folder = 1;
+        } else if (optional_arg == "-s"){
+            appflags.log_sequence = 1;
+        } else if (optional_arg == "-ls"){
+            appflags.use_local_folder = 1;
+            appflags.log_sequence = 1;
+        } 
+        else {
+            console::to_console_error("This is not a valid optional argument");
+            return 1;
+        }
     }
 
     std::string dnxfile_path = argv[1];
 
     TempHandler temphandler;
     std::string trans_path = "dnxgeneratedcode.cpp";
-    std::filesystem::path temp_folder_path = temphandler.create_temp_folder();
+    std::filesystem::path temp_folder_path = temphandler.create_temp_folder(appflags.use_local_folder);
 
     try {
         // try find .dnx file
@@ -55,42 +76,37 @@ int main(int argc, char** argv) {
         auto tokens = lexer.tokenize();
 
         Parser parser(tokens);
-        Program program = parser.parse();
+        translated_program program = parser.parse();
 
         CodeGen codegen;
         std::string cpp = codegen.generate(program); // This returns a string
-        
-        // Generate temp folder
-        if (temphandler.check_if_temp_exists(temp_folder_path) != 0)
-        {
-            std::cerr << "Temp folder does not exists";
-            return 1;
-        }
 
         // Join the temp folder path with the .cpp path
         std::filesystem::path temp_trans_file_path = temp_folder_path / trans_path;
 
         std::ofstream output(temp_trans_file_path);
         if (!output) {
-            std::cerr << "Cannot write to " << temp_trans_file_path.c_str() << "";
+            console::to_console_error("Cannot write to ", temp_trans_file_path.c_str(), "");
             return 1;
         }
         output << cpp;
         output.close(); // Close file before try to run it
 
-        std::cout << "Generated " << trans_path.c_str() << "\n";
+        console::to_console("Generated ", trans_path.c_str(), "\n");
 
-        // Try run program using g++
+        // Try run program using g++ and check for local flag
         CodeRunner coderun;
-        if (coderun.run_program(temp_folder_path ,temp_trans_file_path) == 0) {
+        if (coderun.run_program(temp_folder_path ,temp_trans_file_path) == 0 &&
+    appflags.use_local_folder == 0) {
             temphandler.delete_temp_folder(temp_folder_path);
         }
 
     } catch (const std::exception& error) {
-        std::cerr << "Error " << error.what();
+        console::to_console_error("Main program:\n");
+        std::cerr << error.what() << "\n";
 
         // try to delete the temp folder if the program just fails for some reason
-        if (temphandler.check_if_temp_exists(temp_folder_path)) {
+        if (std::filesystem::exists(temp_folder_path) == true) {
             temphandler.delete_temp_folder(temp_folder_path);
         }
         return 1;

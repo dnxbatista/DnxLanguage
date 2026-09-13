@@ -12,30 +12,31 @@
 
 class Parser {
 public:
-    explicit Parser(const std::vector<Token>& tokens);
-    Program parse();
+    explicit Parser(const std::vector<token>& tokens);
+    translated_program parse();
 
 private:
-    const std::vector<Token>& tokens;
+    const std::vector<token>& tokens;
     size_t pos;
 
-    const Token& current() const;
+    const token& current() const;
     void advance();
-    void expect(TokenType type, const std::string& message);
+    void expect(token_type type, const std::string& message);
 
-    std::unique_ptr<ASTStmt> parseStatement();
-    std::unique_ptr<VarDecl> parseVarDecl();
-    std::unique_ptr<Assignment> parseAssignment();
-    std::unique_ptr<IfStmt> parseIfStmt();
-    std::unique_ptr<WhileStmt> parseWhileStmt();
-    std::unique_ptr<PrintStmt> parsePrintStmt();
-    std::vector<std::unique_ptr<ASTStmt>> parseBlock();
+    std::unique_ptr<ast_statement> parse_statement();
+    std::unique_ptr<int_declaration> parse_int_declaration();
+    std::unique_ptr<string_declaration> parse_string_declaration();
+    std::unique_ptr<assignment> parse_assignment();
+    std::unique_ptr<if_statement> parse_if_statement();
+    std::unique_ptr<while_statement> parse_while_statement();
+    std::unique_ptr<print_statement> parse_print_statement();
+    std::vector<std::unique_ptr<ast_statement>> parse_block();
 
-    std::unique_ptr<ASTExpr> parseExpression();
-    std::unique_ptr<ASTExpr> parseComparison();
-    std::unique_ptr<ASTExpr> parseAddition();
-    std::unique_ptr<ASTExpr> parseMultiplication();
-    std::unique_ptr<ASTExpr> parsePrimary();
+    std::unique_ptr<ast_expression> parse_expression();
+    std::unique_ptr<ast_expression> parse_comparison();
+    std::unique_ptr<ast_expression> parse_addition();
+    std::unique_ptr<ast_expression> parse_multiplication();
+    std::unique_ptr<ast_expression> parse_primary();
 
     [[noreturn]] void error(const std::string& msg);
 };

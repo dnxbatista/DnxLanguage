@@ -8,7 +8,7 @@
 
 class CodeGen {
 public:
-    std::string generate(const Program& prog);
+    std::string generate(const translated_program& prog);
 
 private:
     std::ostringstream out;
@@ -20,7 +20,7 @@ private:
     void increase_indent();
     void decrease_indent();
 
-    void gen_stmt(const ASTStmt& stmt);
-    void gen_expr(const ASTExpr& expr);
+    void generate_statement(const ast_statement& stmt);
+    void generate_expression(const ast_expression& expr);
 };
 #endif //DNXLANGUAGE_CODEGEN_H

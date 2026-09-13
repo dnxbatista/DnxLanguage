@@ -9,74 +9,85 @@
 #include <memory>
 
 // -> Expressions
-struct ASTExpr {
-    virtual ~ASTExpr() = default;
+struct ast_expression {
+    virtual ~ast_expression() = default;
 };
 
-struct IntLiteral : ASTExpr {
+struct int_literal : ast_expression {
     int value;
-    explicit IntLiteral(int v) : value(v) {}
+    explicit int_literal(int v) : value(v) {}
 };
 
-struct IdentifierExpr : ASTExpr {
+struct string_literal : ast_expression {
+    std::string value;
+    explicit string_literal(const std::string& v) : value(v) {}
+};
+
+struct identifier_expression : ast_expression {
     std::string name;
-    explicit IdentifierExpr(const std::string& n) : name(n) {}
+    explicit identifier_expression(const std::string& n) : name(n) {}
 };
 
-struct BinaryExpr : ASTExpr {
+struct binary_expression : ast_expression {
     enum Op { Add, Sub, Mul, Div, Gt, Lt};
     Op op;
-    std::unique_ptr<ASTExpr> left;
-    std::unique_ptr<ASTExpr> right;
+    std::unique_ptr<ast_expression> left;
+    std::unique_ptr<ast_expression> right;
 
-    BinaryExpr(Op o, std::unique_ptr<ASTExpr> l, std::unique_ptr<ASTExpr> r) :
+    binary_expression(Op o, std::unique_ptr<ast_expression> l, std::unique_ptr<ast_expression> r) :
     op(o), left(std::move(l)), right(std::move(r)) {}
 };
 
 // -> Statements
-struct ASTStmt {
-    virtual ~ASTStmt() = default;
+struct ast_statement {
+    virtual ~ast_statement() = default;
 };
 
-struct VarDecl : ASTStmt {
+struct int_declaration : ast_statement {
     std::string name;
-    std::unique_ptr<ASTExpr> init;
-    VarDecl(const std::string& n, std::unique_ptr<ASTExpr> i) : name(n), init(std::move(i)) {}
+    std::unique_ptr<ast_expression> init;
+    int_declaration(const std::string& n, std::unique_ptr<ast_expression> i) : name(n), init(std::move(i)) {}
 };
 
-struct Assignment : ASTStmt {
+struct string_declaration : ast_statement {
     std::string name;
-    std::unique_ptr<ASTExpr> value;
-    Assignment(const std::string& n, std::unique_ptr<ASTExpr> v) : name(n), value(std::move(v)) {}
+    std::unique_ptr<ast_expression> init;
+    string_declaration(const std::string& n, std::unique_ptr<ast_expression> i) : name(n), init(std::move(i)) {}
 };
 
-struct IfStmt : ASTStmt {
-    std::unique_ptr<ASTExpr> condition;
-    std::vector<std::unique_ptr<ASTStmt>> thenBody;
-    std::vector<std::unique_ptr<ASTStmt>> elseBody;
+struct assignment : ast_statement {
+    std::string name;
+    std::unique_ptr<ast_expression> value;
+    assignment(const std::string& n, std::unique_ptr<ast_expression> v) : name(n), value(std::move(v)) {}
+};
 
-    IfStmt(std::unique_ptr<ASTExpr> c,
-        std::vector<std::unique_ptr<ASTStmt>> t,
-        std::vector<std::unique_ptr<ASTStmt>> e)
+struct if_statement : ast_statement {
+    std::unique_ptr<ast_expression> condition;
+    std::vector<std::unique_ptr<ast_statement>> thenBody;
+    std::vector<std::unique_ptr<ast_statement>> elseBody;
+
+    if_statement(std::unique_ptr<ast_expression> c,
+        std::vector<std::unique_ptr<ast_statement>> t,
+        std::vector<std::unique_ptr<ast_statement>> e)
             : condition(std::move(c)), thenBody(std::move(t)), elseBody(std::move(e)) {}
 };
 
-struct WhileStmt : ASTStmt {
-    std::unique_ptr<ASTExpr> condition;
-    std::vector<std::unique_ptr<ASTStmt>> body;
+struct while_statement : ast_statement {
+    std::unique_ptr<ast_expression> condition;
+    std::vector<std::unique_ptr<ast_statement>> body;
 
-    WhileStmt(std::unique_ptr<ASTExpr> c,
-        std::vector<std::unique_ptr<ASTStmt>> b)
+    while_statement(std::unique_ptr<ast_expression> c,
+        std::vector<std::unique_ptr<ast_statement>> b)
             : condition(std::move(c)), body(std::move(b)) {}
 };
 
-struct PrintStmt : ASTStmt {
-    std::unique_ptr<ASTExpr> expression;
-    explicit PrintStmt(std::unique_ptr<ASTExpr> e) : expression(std::move(e)) {}
+struct print_statement : ast_statement {
+    std::unique_ptr<ast_expression> expression;
+    explicit print_statement(std::unique_ptr<ast_expression> e) : expression(std::move(e)) {}
 };
 
-struct Program {
-    std::vector<std::unique_ptr<ASTStmt>> statements;
+struct translated_program {
+    std::vector<std::unique_ptr<ast_statement>> statements;
 };
 
 #endif //DNXLANGUAGE_AST_H

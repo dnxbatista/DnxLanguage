@@ -5,13 +5,17 @@
 #include <string>
 
 // Responsible for language types and expressions and etc, like IntLint is a int
-enum class TokenType {
+enum class token_type {
     // -> Literals
-    IntLint,
+    IntLiteral,
+    StringLiteral,
     Identifier,
 
+    // -> Types
+    Int,
+    String,
+
     // -> Keywords
-    Var,
     If,
     Else,
     While,
@@ -39,12 +43,12 @@ enum class TokenType {
 };
 
 // This struct holdes the the type, the raw value and the value from the token
-struct Token {
-    TokenType type;
+struct token {
+    token_type type;
     std::string text; // Raw text
     std::string value; // for IntLint/Identifier
 
-    Token(TokenType token_type, const std::string& txt, const std::string& val = "")
+    token(token_type token_type, const std::string& txt, const std::string& val = "")
         : type(token_type), text(txt), value(val) {}
 };
 
