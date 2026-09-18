@@ -1,11 +1,10 @@
-// The way this works, is that you receive a .dnx file with the correct syntax
-// and it return the .dnx translated to a .cpp file
-// then using g++, runs the created .cpp file, and then deletes itself
-// is quite "simple" (the codegen sucks btw)
-// i used to AI help (not to write everysingle line) but to help me how to make it
-// im not a expert but this gave me some understand about how progamming languages works
-// and THIS IS NOT A VIBE CODED PROJECT, ALL OF THIS WAS WRITTEN AND RESEARCHED BY A HUMAN BEING.
-
+// DnxLanguage reads a .dnx source file, translates it into C++ code,
+// compiles the generated code with g++, and runs the resulting program.
+// Temporary files are removed automatically after execution unless the
+// local-folder option is enabled.
+//
+// This project was written and researched by a human developer with the
+// help of AI-assisted guidance during development.
 #include <iostream>
 #include <fstream>
 #include <sstream>
